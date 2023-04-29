@@ -42,16 +42,16 @@ export class ScheduleWorkoutController {
         throw createHttpError(StatusCodes.NOT_FOUND, "Executor not found");
       }
 
-      let results = [];
+      let results: any[][][][] = [];
 
       for (let i = 0; i < foundPlan.workouts.length; i++) {
-        let weekResults = [];
+        let weekResults: any[][][] = [];
 
         for (let j = 0; j < foundPlan.week; j++) {
-          let workoutResults = [];
+          let workoutResults: any[][] = [];
 
           for (let k = 0; k < foundPlan.workouts[i].length; k++) {
-            let approachResults = [];
+            let approachResults: any[] = [];
 
             for (let l = 0; l < foundPlan.workouts[i][k].approach; l++) {
               approachResults.push({
