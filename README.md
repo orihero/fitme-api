@@ -1,2 +1,2 @@
-# fitme-api
-Fitme fitness
+# fitme--api
+Fitme backend

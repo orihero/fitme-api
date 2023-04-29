@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const TrainerController_1 = require("./../controllers/TrainerController");
+const validate_1 = require("./../middlewares/validate");
+const trainer_1 = require("./../validation/schemas/trainer");
+const router = (0, express_1.Router)();
+const controller = new TrainerController_1.TrainerController();
+router.get("/", controller.find);
+router.post("/", (0, validate_1.validate)(trainer_1.trainerValidationSchema), controller.create);
+router.get("/:id", validate_1.validateIdParam, controller.findOne);
+router.put("/:id", validate_1.validateIdParam, (0, validate_1.validate)(trainer_1.trainerValidationSchema), controller.update);
+router.put("/request-add-trainer/:id", validate_1.validateIdParam, (0, validate_1.validate)(trainer_1.discipleValidationSchema), controller.requestAddTrainer);
+router.put("/add-disciple/:id", validate_1.validateIdParam, (0, validate_1.validate)(trainer_1.discipleValidationSchema), controller.addDisciple);
+router.put("/remove-disciple/:id", validate_1.validateIdParam, (0, validate_1.validate)(trainer_1.discipleValidationSchema), controller.removeDisciple);
+router.delete("/:id", validate_1.validateIdParam, controller.delete);
+exports.default = router;

@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const ExerciseController_1 = require("../controllers/ExerciseController");
+const validate_1 = require("./../middlewares/validate");
+const exercise_1 = require("./../validation/schemas/exercise");
+const controller = new ExerciseController_1.ExerciseController();
+const router = (0, express_1.Router)();
+router.get("/", controller.find);
+router.post("/", (0, validate_1.validate)(exercise_1.exerciseValidationSchema), controller.create);
+router.get("/:id", validate_1.validateIdParam, controller.findOne);
+router.put("/:id", validate_1.validateIdParam, (0, validate_1.validate)(exercise_1.updateExerciseValidationSchema), controller.update);
+router.put("/update-category/:id", validate_1.validateIdParam, (0, validate_1.validate)(exercise_1.updateExerciseCategoryValidationSchema), controller.updateCategory);
+router.delete("/:id", validate_1.validateIdParam, controller.delete);
+exports.default = router;
