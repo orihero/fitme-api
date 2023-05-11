@@ -2,7 +2,6 @@ import { Document, ObjectId } from "mongoose";
 import { TrainerDocument } from "../trainer";
 import { ExerciseDocument } from "../exercise";
 import { WorkoutPlanDocument } from "./../workout";
-import { ScheduleWorkoutDocument } from "./../schedule-workout";
 import { IProduct, ProductDocument } from "../product";
 import { DishDocument, IDish } from "../dish";
 import { NutritionPlanDocument } from "../nutrition";
@@ -15,9 +14,9 @@ export interface IUser {
   role: ROLES;
   isProAccount: boolean;
   myTrainers: TrainerDocument[];
-  workoutPlans: WorkoutPlanDocument[];
   favoriteExercises: ExerciseDocument[];
-  scheduleWorkouts: ScheduleWorkoutDocument[];
+  workoutPlans: WorkoutPlanDocument[];
+  scheduleWorkouts: ScheduleWorkout[];
   products: ProductDocument[];
   dishes: DishDocument[];
   nutritionPlans: NutritionPlanDocument[];
@@ -27,14 +26,16 @@ export interface IUser {
 
 export type UserDocument = Document & IUser;
 
-export type Measurement = {
-  date: Date;
-  data: MeasurementData[];
+export type ScheduleWorkout = {
+  isFinished: boolean;
+  activeWeek: number;
+  plan: WorkoutPlanDocument;
+  results: WorkoutResult[][][][];
 };
 
-export type MeasurementData = {
-  key: string;
-  value: string;
+export type WorkoutResult = {
+  weight: number;
+  repeat: number;
 };
 
 export type SchemaNutrition = {
@@ -54,4 +55,14 @@ export type SchemaNutritionData = {
   oilPercent: number;
   mergeAmount: number;
   mergeCarb: number;
+};
+
+export type Measurement = {
+  date: Date;
+  data: MeasurementData[];
+};
+
+export type MeasurementData = {
+  key: string;
+  value: string;
 };

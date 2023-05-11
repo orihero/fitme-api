@@ -63,7 +63,7 @@ export const setSchemaNutritionValidationSchema = yup.object({
     })
     .required(),
   data: yup.object().shape({
-    type: yup
+    nType: yup
       .mixed()
       .oneOf([NUTRITION_TYPE.FAT, NUTRITION_TYPE.THIN])
       .required(),
@@ -78,4 +78,17 @@ export const setSchemaNutritionValidationSchema = yup.object({
   amountsP: yup.array().of(yup.number()).required(),
   dishes: yup.array().of(yup.string().matches(objectIdRegex)).required(),
   amountsD: yup.array().of(yup.number()).required(),
+});
+
+export const setScheduleWorkoutValidationSchema = yup.object({
+  planId: yup.string().matches(objectIdRegex).required(),
+});
+
+export const setWorkoutResultValidationSchema = yup.object({
+  group: yup.number().required(),
+  week: yup.number().required(),
+  workout: yup.number().required(),
+  approach: yup.number().required(),
+  weight: yup.number().required(),
+  repeat: yup.number().required(),
 });

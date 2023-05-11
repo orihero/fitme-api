@@ -1,5 +1,5 @@
 import { model, Schema, SchemaTypes } from "mongoose";
-import { NUTRITION_TYPE, ROLES } from "./../../../types/common";
+import { ROLES } from "./../../../types/common";
 import { IUser } from "./types";
 
 const userSchema = new Schema<Partial<IUser>>(
@@ -41,10 +41,43 @@ const userSchema = new Schema<Partial<IUser>>(
       ref: "WorkoutPlan",
     },
 
-    scheduleWorkouts: {
-      type: [SchemaTypes.ObjectId],
-      ref: "ScheduleWorkout",
-    },
+    scheduleWorkouts: [
+      {
+        isFinished: {
+          type: Boolean,
+          required: true,
+        },
+
+        activeWeek: {
+          type: Number,
+          required: true,
+        },
+
+        plan: {
+          type: SchemaTypes.ObjectId,
+          ref: "WorkoutPlan",
+        },
+
+        results: [
+          [
+            [
+              [
+                {
+                  weight: {
+                    type: Number,
+                    required: true,
+                  },
+                  repeat: {
+                    type: Number,
+                    required: true,
+                  },
+                },
+              ],
+            ],
+          ],
+        ],
+      },
+    ],
 
     products: {
       type: [SchemaTypes.ObjectId],
@@ -60,19 +93,6 @@ const userSchema = new Schema<Partial<IUser>>(
       type: [SchemaTypes.ObjectId],
       ref: "NutritionPlan",
     },
-
-    myMeasurements: [
-      {
-        date: Date,
-
-        data: [
-          {
-            key: String,
-            value: String,
-          },
-        ],
-      },
-    ],
 
     schemaNutritions: [
       {
@@ -107,6 +127,19 @@ const userSchema = new Schema<Partial<IUser>>(
         },
 
         amountsD: [Number],
+      },
+    ],
+
+    myMeasurements: [
+      {
+        date: Date,
+
+        data: [
+          {
+            key: String,
+            value: String,
+          },
+        ],
       },
     ],
   },

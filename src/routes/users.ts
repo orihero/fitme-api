@@ -13,6 +13,8 @@ import {
   setMeasurementValueValidationSchema,
   setMeasurementDateValidationSchema,
   setSchemaNutritionValidationSchema,
+  setScheduleWorkoutValidationSchema,
+  setWorkoutResultValidationSchema,
 } from "./../validation/schemas/user";
 
 const router = Router();
@@ -134,6 +136,26 @@ router.put(
   validateIdParam,
   validate(setSchemaNutritionValidationSchema),
   controller.setSchemaNutrition
+);
+
+router.put(
+  "/set-schedule-workout/:id",
+  validateIdParam,
+  validate(setScheduleWorkoutValidationSchema),
+  controller.setScheduleWorkout
+);
+
+router.put(
+  "/set-workout-result/:id",
+  validateIdParam,
+  validate(setWorkoutResultValidationSchema),
+  controller.setWorkoutResult
+);
+
+router.put(
+  "/finish-schedule-workout/:id",
+  validateIdParam,
+  controller.finishScheduleWorkout
 );
 
 router.delete("/:id", validateIdParam, controller.delete);

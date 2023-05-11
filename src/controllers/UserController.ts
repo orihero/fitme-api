@@ -1,12 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import createHttpError from "http-errors";
 import { StatusCodes } from "http-status-codes";
-import { UserModel, IUser } from "./../database/models/user";
-import { WorkoutPlanModel } from "./../database/models/workout";
-import { ExerciseModel } from "./../database/models/exercise";
-import { ProductModel } from "./../database/models/product";
+import { IUser } from "./../database/models/user";
 import { changeResponse } from "./../utils/changeResponse";
-import { TrainerService, UserService } from "./../services";
+import { UserService } from "./../services";
 
 export class UserController {
   public async me(req: Request, res: Response, next: NextFunction) {
@@ -258,6 +255,48 @@ export class UserController {
   ) {
     try {
       const updated = await UserService.setSchemaNutrition(req);
+
+      res.status(StatusCodes.OK).json(changeResponse(true, updated));
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async setScheduleWorkout(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const updated = await UserService.setScheduleWorkout(req);
+
+      res.status(StatusCodes.OK).json(changeResponse(true, updated));
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async setWorkoutResult(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const updated = await UserService.setWorkoutResult(req);
+
+      res.status(StatusCodes.OK).json(changeResponse(true, updated));
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async finishScheduleWorkout(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const updated = await UserService.finishScheduleWorkout(req);
 
       res.status(StatusCodes.OK).json(changeResponse(true, updated));
     } catch (e) {

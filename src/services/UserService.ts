@@ -1,13 +1,17 @@
 import { Request } from "express";
 import createHttpError from "http-errors";
 import { StatusCodes } from "http-status-codes";
-import { IUser, UserModel, SchemaNutrition } from "../database/models/user";
-import { OtpModel } from "../database/models/otp";
-import { TrainerModel } from "../database/models/trainer";
 import TrainerService from "./TrainerService";
+import {
+  IUser,
+  UserModel,
+  SchemaNutrition,
+  ScheduleWorkout,
+} from "../database/models/user";
+import { TrainerModel } from "../database/models/trainer";
+import { OtpModel } from "../database/models/otp";
 import { ExerciseModel } from "../database/models/exercise";
 import { WorkoutPlanModel } from "../database/models/workout";
-import { ScheduleWorkoutModel } from "../database/models/schedule-workout";
 import { ProductModel } from "../database/models/product";
 import { DishModel } from "../database/models/dish";
 
@@ -614,7 +618,7 @@ const UserService = {
     const {
       date: { year, month, day },
       data: {
-        type,
+        nType,
         dailyNorm,
         amount,
         proteinPercent,
@@ -654,7 +658,7 @@ const UserService = {
     const obj: SchemaNutrition = {
       date: new Date(`${year}-${month}-${day}`),
       data: {
-        nType: type,
+        nType,
         dailyNorm: Number(dailyNorm),
         amount: Number(amount),
         proteinPercent: Number(proteinPercent),
@@ -685,17 +689,198 @@ const UserService = {
     if (index === -1) {
       foundUser.schemaNutritions = [...foundUser.schemaNutritions, obj];
     } else {
-      if (products.length === 0 && dishes.length === 0) {
-        foundUser.schemaNutritions = [
-          ...foundUser.schemaNutritions.slice(0, index),
-          ...foundUser.schemaNutritions.slice(index + 1),
-        ];
-      } else {
-        foundUser.schemaNutritions[index] = {
-          ...foundUser.schemaNutritions[index],
-          ...obj,
-        };
+      foundUser.schemaNutritions[index] = {
+        ...foundUser.schemaNutritions[index],
+        ...obj,
+      };
+
+      // if (products.length === 0 && dishes.length === 0) {
+      //   foundUser.schemaNutritions = [
+      //     ...foundUser.schemaNutritions.slice(0, index),
+      //     ...foundUser.schemaNutritions.slice(index + 1),
+      //   ];
+      // } else {
+      //   /// ....
+      // }
+    }
+
+    await UserModel.findByIdAndUpdate(req.params.id, foundUser);
+
+    return foundUser;
+  },
+
+  setScheduleWorkout: async (req: Request) => {
+    // @ts-ignore
+    let foundUser: IUser = req.user;
+
+    if (req.params.id !== foundUser._id.toString()) {
+      foundUser = await UserService.find({ _id: req.params.id });
+    }
+
+    if (!foundUser) {
+      throw createHttpError(StatusCodes.NOT_FOUND, "User not found");
+    }
+
+    const plan = await WorkoutPlanModel.findById(req.body.planId);
+
+    if (!plan) {
+      throw createHttpError(StatusCodes.NOT_FOUND, "WorkoutPlan not found");
+    }
+
+    if (foundUser.scheduleWorkouts.find((s) => !s.isFinished)) {
+      throw createHttpError(
+        StatusCodes.BAD_REQUEST,
+        "User already have schedule workout"
+      );
+    }
+
+    let results: any[][][][] = [];
+
+    for (let i = 0; i < plan.workouts.length; i++) {
+      let weekResults: any[][][] = [];
+
+      for (let j = 0; j < plan.week; j++) {
+        let workoutResults: any[][] = [];
+
+        for (let k = 0; k < plan.workouts[i].length; k++) {
+          let approachResults: any[] = [];
+
+          for (let l = 0; l < plan.workouts[i][k].approach; l++) {
+            approachResults.push({
+              weight: 0,
+              repeat: 0,
+            });
+          }
+
+          workoutResults.push(approachResults);
+        }
+
+        weekResults.push(workoutResults);
       }
+
+      results.push(weekResults);
+    }
+
+    foundUser.scheduleWorkouts = [
+      ...foundUser.scheduleWorkouts,
+      {
+        isFinished: false,
+        activeWeek: 0,
+        plan,
+        results,
+      },
+    ];
+
+    await UserModel.findByIdAndUpdate(req.params.id, foundUser);
+
+    return foundUser;
+  },
+
+  setWorkoutResult: async (req: Request) => {
+    // @ts-ignore
+    let foundUser: IUser = req.user;
+
+    if (req.params.id !== foundUser._id.toString()) {
+      foundUser = await UserService.find({ _id: req.params.id });
+    }
+
+    if (!foundUser) {
+      throw createHttpError(StatusCodes.NOT_FOUND, "User not found");
+    }
+
+    const foundIndex = foundUser.scheduleWorkouts.findIndex(
+      (s) => !s.isFinished
+    );
+
+    if (foundIndex === -1) {
+      throw createHttpError(
+        StatusCodes.BAD_REQUEST,
+        "User has not schedule workout yet"
+      );
+    }
+
+    const found: ScheduleWorkout = {
+      // @ts-ignore
+      ...foundUser.scheduleWorkouts[foundIndex]._doc,
+    };
+
+    const { group, week, workout, approach, weight, repeat } = req.body;
+
+    if (found.results.length <= group) {
+      throw createHttpError(StatusCodes.BAD_REQUEST, "Invalid group value");
+    }
+
+    if (found.results[group].length <= week) {
+      throw createHttpError(StatusCodes.BAD_REQUEST, "Invalid week value");
+    }
+
+    if (found.results[group][week].length <= workout) {
+      throw createHttpError(StatusCodes.BAD_REQUEST, "Invalid workout value");
+    }
+
+    if (found.results[group][week][workout].length <= approach) {
+      throw createHttpError(StatusCodes.BAD_REQUEST, "Invalid approach value");
+    }
+
+    const results = [...found.results];
+    for (let i = 0; i < results.length; i++) {
+      for (let j = 0; j < results[i].length; j++) {
+        for (let k = 0; k < results[i][j].length; k++) {
+          for (let l = 0; l < results[i][j][k].length; l++) {
+            if (
+              i === Number(group) &&
+              j === Number(week) &&
+              k === Number(workout) &&
+              l === Number(approach)
+            ) {
+              results[i][j][k][l] = {
+                weight: Number(weight),
+                repeat: Number(repeat),
+              };
+            }
+          }
+        }
+      }
+    }
+
+    found.results = [...results];
+
+    foundUser.scheduleWorkouts[foundIndex] = { ...found };
+
+    await UserModel.findByIdAndUpdate(req.params.id, foundUser);
+
+    return foundUser;
+  },
+
+  finishScheduleWorkout: async (req: Request) => {
+    // @ts-ignore
+    let foundUser: IUser = req.user;
+
+    if (req.params.id !== foundUser._id.toString()) {
+      foundUser = await UserService.find({ _id: req.params.id });
+    }
+
+    if (!foundUser) {
+      throw createHttpError(StatusCodes.NOT_FOUND, "User not found");
+    }
+
+    const foundIndex = foundUser.scheduleWorkouts.findIndex(
+      (s) => !s.isFinished
+    );
+
+    if (foundIndex === -1) {
+      throw createHttpError(
+        StatusCodes.BAD_REQUEST,
+        "User has not schedule workout yet"
+      );
+    }
+
+    const found = foundUser.scheduleWorkouts[foundIndex];
+
+    found.activeWeek = found.activeWeek + 4;
+
+    if (found.activeWeek === found.plan.week) {
+      found.isFinished = true;
     }
 
     await UserModel.findByIdAndUpdate(req.params.id, foundUser);
@@ -726,12 +911,6 @@ const UserService = {
 
         await TrainerModel.findByIdAndUpdate(trainer._id, trainer);
       }
-    }
-
-    for (let i = 0; i < user.scheduleWorkouts.length; i++) {
-      await ScheduleWorkoutModel.findByIdAndDelete(
-        user.scheduleWorkouts[i]._id
-      );
     }
 
     for (let i = 0; i < user.workoutPlans.length; i++) {
