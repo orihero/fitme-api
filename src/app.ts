@@ -27,6 +27,9 @@ class App {
       await this.database.connect();
       await this.applyMiddlewares();
       this.app.use("/api", api);
+      this.app.use("/", (r,s)=>{
+        s.send("YOU REACHED FITME.UZ")
+      });
       this.app.use([notfound, generic]);
 
       await this.server.listen(this.port, () => {
