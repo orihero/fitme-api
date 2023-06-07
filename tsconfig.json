@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES5",
     "module": "commonjs",
     "esModuleInterop": true,
     "moduleResolution": "node",
@@ -10,10 +10,26 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
     "outDir": "./build",
-    "typeRoots": [
-      "node_modules/yup",
-      "node_modules/passport"
-    ],
-    "noImplicitAny": false
-  }
+    "typeRoots": ["./node_modules/@types"],
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*"]
 }
+
+// {
+//   "compilerOptions": {
+//     "noImplicitAny": false,
+//     "noEmitOnError": true,
+//     "removeComments": false,
+//     "sourceMap": true,
+//     "target": "es5",
+//     "outDir": "build"
+//   },
+//   "include": [
+//     "src/**/*"
+//   ]
+// }
