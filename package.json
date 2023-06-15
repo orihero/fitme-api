@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "yarn build && NODE_ENV=production node build/index.js",
+    "start": "yarn build && NODE_ENV=production node build/app.js",
     "start:dev": "NODE_ENV=development tsnd index.ts"
   },
   "repository": {

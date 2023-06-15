@@ -48,7 +48,6 @@ var morgan_1 = __importDefault(require("morgan"));
 var cors_1 = __importDefault(require("cors"));
 var passport_1 = __importDefault(require("passport"));
 var express_session_1 = __importDefault(require("express-session"));
-var routes_1 = __importDefault(require("./routes"));
 var database_1 = __importDefault(require("./database"));
 var error_1 = require("./middlewares/error");
 var bootstrap_1 = __importDefault(require("./bootstrap"));
@@ -66,15 +65,11 @@ var App = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        _a.trys.push([0, 2, , 3]);
                         (0, bootstrap_1.default)();
-                        return [4 /*yield*/, this.database.connect()];
-                    case 1:
-                        _a.sent();
-                        return [4 /*yield*/, this.applyMiddlewares()];
-                    case 2:
-                        _a.sent();
-                        this.app.use("/api", routes_1.default);
+                        // await this.database.connect();
+                        // await this.applyMiddlewares();
+                        // this.app.use("/api", api);
                         this.app.use("/", function (r, s) {
                             s.send("YOU REACHED FITME.UZ");
                         });
@@ -82,13 +77,13 @@ var App = /** @class */ (function () {
                         return [4 /*yield*/, this.server.listen(this.port, function () {
                                 console.log("Server listening at port ".concat(_this.port));
                             })];
-                    case 3:
+                    case 1:
                         _a.sent();
-                        return [3 /*break*/, 5];
-                    case 4:
+                        return [3 /*break*/, 3];
+                    case 2:
                         e_1 = _a.sent();
                         throw Error(e_1 || "Error occurred while starting app");
-                    case 5: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         }); };
