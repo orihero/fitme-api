@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
 var AppDatabase = /** @class */ (function () {
     function AppDatabase() {
-        this.url = process.env.DB_URL;
+        this.url = process.env.DB_URL || "mongodb+srv://orihero:asdf12345@fitme.b0m5249.mongodb.net/?retryWrites=true&w=majority";
         this.dbName = process.env.DB_NAME;
     }
     AppDatabase.prototype.connect = function () {
@@ -52,7 +52,8 @@ var AppDatabase = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, mongoose_1.default.connect("".concat(this.url, "/").concat(this.dbName))];
+                        console.log(this.url);
+                        return [4 /*yield*/, mongoose_1.default.connect("".concat(this.url))];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
                         e_1 = _a.sent();

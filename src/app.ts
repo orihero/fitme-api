@@ -24,9 +24,9 @@ class App {
     try {
       bootstrap();
 
-      // await this.database.connect();
-      // await this.applyMiddlewares();
-      // this.app.use("/api", api);
+      await this.database.connect();
+      await this.applyMiddlewares();
+      this.app.use("/api", api);
       this.app.use("/", (r,s)=>{
         s.send("YOU REACHED FITME.UZ")
       });
