@@ -18,7 +18,7 @@ class App {
   private readonly app: Express = express();
   private readonly database = new AppDatabase();
   private readonly server: Server = http.createServer(this.app);
-  private readonly port = process.env.PORT || process.env.SERVER_PORT;
+  private readonly port = process.env.PORT || process.env.SERVER_PORT || "5000";
 
   public start = async () => {
     try {
@@ -27,7 +27,7 @@ class App {
       await this.database.connect();
       await this.applyMiddlewares();
       this.app.use("/api", api);
-      this.app.use("/", (r,s)=>{
+      this.app.use("/", (r, s) => {
         s.send("YOU REACHED FITME.UZ")
       });
       this.app.use([notfound, generic]);
