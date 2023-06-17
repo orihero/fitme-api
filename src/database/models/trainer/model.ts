@@ -2,7 +2,7 @@ import { model, Schema, SchemaTypes } from "mongoose";
 import { ITrainer } from "./types";
 import { ROLES, GENDER } from "./../../../types/common";
 
-const trainerSchema = new Schema<ITrainer>(
+const trainerSchema = new Schema<Partial<ITrainer>>(
   {
     name: {
       type: String,
@@ -82,31 +82,37 @@ const trainerSchema = new Schema<ITrainer>(
     requestedDisciples: {
       type: [SchemaTypes.ObjectId],
       ref: "User",
+      default: null
     },
 
     disciples: {
       type: [SchemaTypes.ObjectId],
       ref: "User",
+      default: null
     },
 
     workoutPlans: {
       type: [SchemaTypes.ObjectId],
       ref: "WorkoutPlan",
+      default: null
     },
 
     products: {
       type: [SchemaTypes.ObjectId],
       ref: "Product",
+      default: null
     },
 
     dishes: {
       type: [SchemaTypes.ObjectId],
       ref: "Dish",
+      default: null
     },
 
     nutritionPlans: {
       type: [SchemaTypes.ObjectId],
       ref: "NutritionPlan",
+      default: null
     },
   },
   { timestamps: true }

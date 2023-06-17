@@ -95,6 +95,7 @@ export class TrainerController {
 
       res.status(StatusCodes.CREATED).json(changeResponse(true, saved));
     } catch (e) {
+      console.log(e);
       next(e);
     }
   }
