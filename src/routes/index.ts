@@ -16,7 +16,7 @@ import authenticate from "../middlewares/authenticate";
 const router = Router();
 
 router.use("/auth", auth);
-router.use("/users", users);
+router.use("/users", authenticate, users);
 router.use("/trainers", trainers);
 router.use("/categories", categories);
 router.use("/exercises", exercises);
