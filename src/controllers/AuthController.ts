@@ -22,7 +22,8 @@ export class AuthController {
         );
       }
 
-      const otpText = Math.random().toString().slice(3, 7);
+      // const otpText = Math.random().toString().slice(3, 7);
+      const otpText = "1111";
       let foundOTP: OtpDocument | null = await OtpModel.findOne({ phone });
 
       if (foundOTP) {
@@ -66,7 +67,8 @@ export class AuthController {
         );
       }
 
-      const otpText = Math.random().toString().slice(3, 7);
+      // const otpText = Math.random().toString().slice(3, 7);
+      const otpText = "1111";
       let foundOTP: OtpDocument | null = await OtpModel.findOne({ phone });
 
       if (foundOTP) {
