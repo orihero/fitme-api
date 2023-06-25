@@ -901,11 +901,11 @@ const UserService = {
       let trainer = await TrainerModel.findById(user.myTrainers[i]._id);
 
       if (trainer && user) {
-        trainer.requestedDisciples = trainer.requestedDisciples.filter(
+        trainer.requestedDisciples = trainer.requestedDisciples?.filter(
           (d) => d._id.toString() !== user._id.toString()
         );
 
-        trainer.disciples = trainer.disciples.filter(
+        trainer.disciples = trainer.disciples?.filter(
           (d) => d._id.toString() !== user._id.toString()
         );
 
