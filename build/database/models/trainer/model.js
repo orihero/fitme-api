@@ -68,26 +68,32 @@ var trainerSchema = new mongoose_1.Schema({
     requestedDisciples: {
         type: [mongoose_1.SchemaTypes.ObjectId],
         ref: "User",
+        default: null
     },
     disciples: {
         type: [mongoose_1.SchemaTypes.ObjectId],
         ref: "User",
+        default: null
     },
     workoutPlans: {
         type: [mongoose_1.SchemaTypes.ObjectId],
         ref: "WorkoutPlan",
+        default: null
     },
     products: {
         type: [mongoose_1.SchemaTypes.ObjectId],
         ref: "Product",
+        default: null
     },
     dishes: {
         type: [mongoose_1.SchemaTypes.ObjectId],
         ref: "Dish",
+        default: null
     },
     nutritionPlans: {
         type: [mongoose_1.SchemaTypes.ObjectId],
         ref: "NutritionPlan",
+        default: null
     },
 }, { timestamps: true });
 exports.TrainerModel = (0, mongoose_1.model)("Trainer", trainerSchema);

@@ -7,6 +7,34 @@ import { OtpModel, OtpDocument } from "../database/models/otp";
 import { UserModel } from "./../database/models/user/";
 import { JWTService } from "../services";
 import { getSeconds } from "./../utils/getSeconds";
+import nodemailer from "nodemailer";
+
+var transport = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "fitme.uz@gmail.com",
+    pass: "gyjtszcdhryrogyx",
+  },
+});
+
+transport.verify(function (error, success) {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Server is ready to take our messages");
+  }
+});
+
+export const sendOtp = (otpText: string, phone: string) => {
+  var mailOptions = {
+    from: '"Fitme Team" <empire.soft.uz@gmail.com>',
+    to: phone,
+    subject: "Fitme app authorization",
+    html: `<b>Добрый день! </b><br> Вот ваш OTP-код для аутентификации в приложении FITME:<br><b>${otpText}</b><br>С уважением, команда FITME`,
+  };
+
+  transport.sendMail(mailOptions);
+};
 
 export class AuthController {
   public async signup(req: Request, res: Response, next: NextFunction) {
@@ -22,9 +50,11 @@ export class AuthController {
         );
       }
 
-      // const otpText = Math.random().toString().slice(3, 7);
-      const otpText = "1111";
+      const otpText = Math.random().toString().slice(3, 7);
+      // const otpText = "1111";
       let foundOTP: OtpDocument | null = await OtpModel.findOne({ phone });
+
+      sendOtp(otpText, phone);
 
       if (foundOTP) {
         await OtpModel.updateOne(
@@ -67,8 +97,8 @@ export class AuthController {
         );
       }
 
-      // const otpText = Math.random().toString().slice(3, 7);
-      const otpText = "1111";
+      const otpText = Math.random().toString().slice(3, 7);
+      // const otpText = "1111";
       let foundOTP: OtpDocument | null = await OtpModel.findOne({ phone });
 
       if (foundOTP) {
@@ -88,7 +118,7 @@ export class AuthController {
       }
 
       // sent otp to number
-
+      sendOtp(otpText, phone);
       res
         .status(StatusCodes.OK)
         .json(changeResponse(true, { phone, otp: otpText }));

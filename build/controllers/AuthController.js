@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthController = void 0;
+exports.AuthController = exports.sendOtp = void 0;
 var http_errors_1 = __importDefault(require("http-errors"));
 var http_status_codes_1 = __importDefault(require("http-status-codes"));
 var jsonwebtoken_1 = require("jsonwebtoken");
@@ -48,6 +48,32 @@ var otp_1 = require("../database/models/otp");
 var user_1 = require("./../database/models/user/");
 var services_1 = require("../services");
 var getSeconds_1 = require("./../utils/getSeconds");
+var nodemailer_1 = __importDefault(require("nodemailer"));
+var transport = nodemailer_1.default.createTransport({
+    service: "gmail",
+    auth: {
+        user: "fitme.uz@gmail.com",
+        pass: "gyjtszcdhryrogyx",
+    },
+});
+transport.verify(function (error, success) {
+    if (error) {
+        console.log(error);
+    }
+    else {
+        console.log("Server is ready to take our messages");
+    }
+});
+var sendOtp = function (otpText, phone) {
+    var mailOptions = {
+        from: '"Fitme Team" <empire.soft.uz@gmail.com>',
+        to: phone,
+        subject: "Fitme app authorization",
+        html: "<b>\u0414\u043E\u0431\u0440\u044B\u0439 \u0434\u0435\u043D\u044C! </b><br> \u0412\u043E\u0442 \u0432\u0430\u0448 OTP-\u043A\u043E\u0434 \u0434\u043B\u044F \u0430\u0443\u0442\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0446\u0438\u0438 \u0432 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0438 FITME:<br><b>".concat(otpText, "</b><br>\u0421 \u0443\u0432\u0430\u0436\u0435\u043D\u0438\u0435\u043C, \u043A\u043E\u043C\u0430\u043D\u0434\u0430 FITME"),
+    };
+    transport.sendMail(mailOptions);
+};
+exports.sendOtp = sendOtp;
 var AuthController = /** @class */ (function () {
     function AuthController() {
     }
@@ -69,6 +95,7 @@ var AuthController = /** @class */ (function () {
                         return [4 /*yield*/, otp_1.OtpModel.findOne({ phone: phone })];
                     case 2:
                         foundOTP = _b.sent();
+                        (0, exports.sendOtp)(otpText, phone);
                         if (!foundOTP) return [3 /*break*/, 4];
                         return [4 /*yield*/, otp_1.OtpModel.updateOne({ phone: phone }, {
                                 name: name_1,
@@ -138,6 +165,7 @@ var AuthController = /** @class */ (function () {
                         _a.label = 6;
                     case 6:
                         // sent otp to number
+                        (0, exports.sendOtp)(otpText, phone);
                         res
                             .status(http_status_codes_1.default.OK)
                             .json((0, changeResponse_1.changeResponse)(true, { phone: phone, otp: otpText }));

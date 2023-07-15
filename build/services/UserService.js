@@ -933,73 +933,74 @@ var UserService = {
     }); },
     delete: function (id) { return __awaiter(void 0, void 0, void 0, function () {
         var user, i, trainer, i, workoutPlan, i, product;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var _a, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0: return [4 /*yield*/, UserService.find({ _id: id })];
                 case 1:
-                    user = _a.sent();
+                    user = _c.sent();
                     if (!user) {
                         throw (0, http_errors_1.default)(http_status_codes_1.StatusCodes.NOT_FOUND, "User not found");
                     }
                     return [4 /*yield*/, otp_1.OtpModel.deleteOne({ phone: user.phoneNumber })];
                 case 2:
-                    _a.sent();
+                    _c.sent();
                     i = 0;
-                    _a.label = 3;
+                    _c.label = 3;
                 case 3:
                     if (!(i < user.myTrainers.length)) return [3 /*break*/, 7];
                     return [4 /*yield*/, trainer_1.TrainerModel.findById(user.myTrainers[i]._id)];
                 case 4:
-                    trainer = _a.sent();
+                    trainer = _c.sent();
                     if (!(trainer && user)) return [3 /*break*/, 6];
-                    trainer.requestedDisciples = trainer.requestedDisciples.filter(function (d) { return d._id.toString() !== user._id.toString(); });
-                    trainer.disciples = trainer.disciples.filter(function (d) { return d._id.toString() !== user._id.toString(); });
+                    trainer.requestedDisciples = (_a = trainer.requestedDisciples) === null || _a === void 0 ? void 0 : _a.filter(function (d) { return d._id.toString() !== user._id.toString(); });
+                    trainer.disciples = (_b = trainer.disciples) === null || _b === void 0 ? void 0 : _b.filter(function (d) { return d._id.toString() !== user._id.toString(); });
                     return [4 /*yield*/, trainer_1.TrainerModel.findByIdAndUpdate(trainer._id, trainer)];
                 case 5:
-                    _a.sent();
-                    _a.label = 6;
+                    _c.sent();
+                    _c.label = 6;
                 case 6:
                     i++;
                     return [3 /*break*/, 3];
                 case 7:
                     i = 0;
-                    _a.label = 8;
+                    _c.label = 8;
                 case 8:
                     if (!(i < user.workoutPlans.length)) return [3 /*break*/, 12];
                     return [4 /*yield*/, workout_1.WorkoutPlanModel.findById(user.workoutPlans[i]._id)];
                 case 9:
-                    workoutPlan = _a.sent();
+                    workoutPlan = _c.sent();
                     if (!(workoutPlan &&
                         workoutPlan.creatorUser &&
                         workoutPlan.creatorUser.toString() === user._id.toString())) return [3 /*break*/, 11];
                     return [4 /*yield*/, workout_1.WorkoutPlanModel.findByIdAndDelete(workoutPlan._id)];
                 case 10:
-                    _a.sent();
-                    _a.label = 11;
+                    _c.sent();
+                    _c.label = 11;
                 case 11:
                     i++;
                     return [3 /*break*/, 8];
                 case 12:
                     i = 0;
-                    _a.label = 13;
+                    _c.label = 13;
                 case 13:
                     if (!(i < user.products.length)) return [3 /*break*/, 17];
                     return [4 /*yield*/, product_1.ProductModel.findById(user.products[i]._id)];
                 case 14:
-                    product = _a.sent();
+                    product = _c.sent();
                     if (!(product &&
                         product.creatorUser &&
                         product.creatorUser.toString() === user._id.toString())) return [3 /*break*/, 16];
                     return [4 /*yield*/, product_1.ProductModel.findByIdAndDelete(product._id)];
                 case 15:
-                    _a.sent();
-                    _a.label = 16;
+                    _c.sent();
+                    _c.label = 16;
                 case 16:
                     i++;
                     return [3 /*break*/, 13];
                 case 17: return [4 /*yield*/, user_1.UserModel.findByIdAndDelete(id)];
                 case 18:
-                    _a.sent();
+                    _c.sent();
                     return [2 /*return*/];
             }
         });

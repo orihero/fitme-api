@@ -170,6 +170,7 @@ var TrainerController = /** @class */ (function () {
                         return [3 /*break*/, 5];
                     case 4:
                         e_2 = _b.sent();
+                        console.log(e_2);
                         next(e_2);
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];

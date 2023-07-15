@@ -59,7 +59,7 @@ var App = /** @class */ (function () {
         this.app = (0, express_1.default)();
         this.database = new database_1.default();
         this.server = http_1.default.createServer(this.app);
-        this.port = process.env.PORT || process.env.SERVER_PORT;
+        this.port = process.env.PORT || process.env.SERVER_PORT || "5000";
         this.start = function () { return __awaiter(_this, void 0, void 0, function () {
             var e_1;
             var _this = this;
