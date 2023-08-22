@@ -93,7 +93,12 @@ export class AuthController {
     try {
       const { phone } = req.body;
 
-      const foundUser = await UserModel.findOne({ phoneNumber: phone });
+      let foundUser = await UserModel.findOne({ phoneNumber: phone });
+
+      //Search for trainers
+      if (!foundUser) {
+        foundUser = await TrainerModel.findOne({ email: phone });
+      }
 
       if (!foundUser) {
         throw createHttpError(
