@@ -8,6 +8,7 @@ import { UserModel } from "./../database/models/user/";
 import { JWTService } from "../services";
 import { getSeconds } from "./../utils/getSeconds";
 import nodemailer from "nodemailer";
+import { TrainerModel } from "../database/models/trainer";
 
 var transport = nodemailer.createTransport({
   service: "gmail",
@@ -41,7 +42,11 @@ export class AuthController {
     try {
       const { phone, name } = req.body;
 
-      const foundUser = await UserModel.findOne({ phoneNumber: phone });
+      let foundUser = await UserModel.findOne({ phoneNumber: phone });
+      //Search for trainers
+      if (!foundUser) {
+        foundUser = await TrainerModel.findOne({ email: phone });
+      }
 
       if (foundUser) {
         throw createHttpError(

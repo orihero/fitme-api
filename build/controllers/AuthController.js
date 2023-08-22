@@ -49,6 +49,7 @@ var user_1 = require("./../database/models/user/");
 var services_1 = require("../services");
 var getSeconds_1 = require("./../utils/getSeconds");
 var nodemailer_1 = __importDefault(require("nodemailer"));
+var trainer_1 = require("database/models/trainer");
 var transport = nodemailer_1.default.createTransport({
     service: "gmail",
     auth: {
@@ -83,48 +84,54 @@ var AuthController = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 7, , 8]);
+                        _b.trys.push([0, 9, , 10]);
                         _a = req.body, phone = _a.phone, name_1 = _a.name;
                         return [4 /*yield*/, user_1.UserModel.findOne({ phoneNumber: phone })];
                     case 1:
                         foundUser = _b.sent();
+                        if (!!foundUser) return [3 /*break*/, 3];
+                        return [4 /*yield*/, trainer_1.TrainerModel.findOne({ email: phone })];
+                    case 2:
+                        foundUser = _b.sent();
+                        _b.label = 3;
+                    case 3:
                         if (foundUser) {
                             throw (0, http_errors_1.default)(http_status_codes_1.default.BAD_REQUEST, "User with ".concat(phone, " already signed up"));
                         }
                         otpText = Math.random().toString().slice(3, 7);
                         return [4 /*yield*/, otp_1.OtpModel.findOne({ phone: phone })];
-                    case 2:
+                    case 4:
                         foundOTP = _b.sent();
                         (0, exports.sendOtp)(otpText, phone);
-                        if (!foundOTP) return [3 /*break*/, 4];
+                        if (!foundOTP) return [3 /*break*/, 6];
                         return [4 /*yield*/, otp_1.OtpModel.updateOne({ phone: phone }, {
                                 name: name_1,
                                 date: new Date(Date.now()),
                                 otp: otpText,
                             })];
-                    case 3:
+                    case 5:
                         _b.sent();
-                        return [3 /*break*/, 6];
-                    case 4: return [4 /*yield*/, otp_1.OtpModel.create({
+                        return [3 /*break*/, 8];
+                    case 6: return [4 /*yield*/, otp_1.OtpModel.create({
                             phone: phone,
                             name: name_1,
                             date: new Date(Date.now()),
                             otp: otpText,
                         })];
-                    case 5:
+                    case 7:
                         _b.sent();
-                        _b.label = 6;
-                    case 6:
+                        _b.label = 8;
+                    case 8:
                         // sent otp to number
                         res
                             .status(http_status_codes_1.default.OK)
                             .json((0, changeResponse_1.changeResponse)(true, { phone: phone, otp: otpText }));
-                        return [3 /*break*/, 8];
-                    case 7:
+                        return [3 /*break*/, 10];
+                    case 9:
                         e_1 = _b.sent();
                         next(e_1);
-                        return [3 /*break*/, 8];
-                    case 8: return [2 /*return*/];
+                        return [3 /*break*/, 10];
+                    case 10: return [2 /*return*/];
                 }
             });
         });
