@@ -121,6 +121,20 @@ export class TrainerController {
     }
   }
 
+  public async findByEmail(req: Request, res: Response, next: NextFunction) {
+    try {
+      const found = await TrainerService.find({ email: req.params.email });
+
+      if (!found) {
+        throw createHttpError(StatusCodes.NOT_FOUND, "Trainer not found");
+      }
+
+      res.status(StatusCodes.OK).json(changeResponse(true, found));
+    } catch (e) {
+      next(e);
+    }
+  }
+
   public async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id: _id } = req.params;

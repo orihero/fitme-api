@@ -15,6 +15,7 @@ router.get("/", controller.find);
 router.post("/", validate(trainerValidationSchema), controller.create);
 
 router.get("/:id", validateIdParam, controller.findOne);
+router.get("/find/:email", controller.findByEmail);
 
 router.put(
   "/:id",
