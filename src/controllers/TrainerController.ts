@@ -169,7 +169,11 @@ export class TrainerController {
       ];
 
       await foundTrainer.save();
-
+      console.log("====================================");
+      console.log(
+        "ADDED " + foundUser.name + " TO " + foundTrainer.name + " REQUEST LIST"
+      );
+      console.log("====================================");
       res
         .status(StatusCodes.OK)
         .json(changeResponse(true, { message: "Request sent to trainer" }));
