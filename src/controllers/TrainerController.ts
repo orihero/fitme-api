@@ -5,7 +5,7 @@ import { TrainerDocument, TrainerModel } from "../database/models/trainer";
 import { changeResponse } from "./../utils/changeResponse";
 import { UserModel } from "./../database/models/user/model";
 import { UserDocument } from "./../database/models/user/types";
-import { GENDER } from "./../types/common";
+import { GENDER, ROLES } from "./../types/common";
 import { TrainerService, UserService } from "../services";
 
 export class TrainerController {
@@ -91,6 +91,13 @@ export class TrainerController {
         email,
         phoneNumber,
         ...rest,
+      });
+
+      const savedUser = await UserModel.create({
+        name,
+        email,
+        role: ROLES.TRAINER,
+        phoneNumber,
       });
 
       res.status(StatusCodes.CREATED).json(changeResponse(true, saved));
