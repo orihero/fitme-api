@@ -1,4 +1,4 @@
-import { model, Schema, SchemaTypes } from "mongoose";
+  import { model, Schema, SchemaTypes } from "mongoose";
 import { INutritionPlan } from "./types";
 import { NUTRITION_TYPE } from "../../../types/common";
 
