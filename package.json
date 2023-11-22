@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "yarn build && NODE_ENV=production node build/app.js",
-    "start:dev": "NODE_ENV=development tsnd index.ts"
+    "start:dev": "tsnd index.ts"
   },
   "repository": {
     "type": "git",
