@@ -17,7 +17,6 @@ const authenticate: Handler = (req, res, next) =>
       if (err) {
         return next(err);
       }
-
       return next();
     });
   })(req, res, next);

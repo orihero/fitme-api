@@ -170,8 +170,10 @@ export class AuthController {
 
       await OtpModel.findByIdAndDelete(foundOtp._id);
 
-      const user = await UserModel.findOne({ phoneNumber: phone });
-
+      let user = await UserModel.findOne({ phoneNumber: phone });
+      if (!user) {
+        user = await TrainerModel.findOne({ email: phone });
+      }
       if (user) {
         const accessToken = await JWTService.signAccessToken(
           user?._id.toString(),
