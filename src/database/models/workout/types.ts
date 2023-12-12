@@ -7,6 +7,7 @@ import { Document, ObjectId } from "mongoose";
 export interface IWorkoutPlan {
   _id: ObjectId | string;
   title: string;
+  isPublic: boolean;
   description: string;
   price: number;
   gender: GENDER;

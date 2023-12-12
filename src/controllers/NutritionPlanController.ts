@@ -17,8 +17,13 @@ export class NutritionPlanController {
 
   public async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const created = await NutritionPlanService.create(req.body);
-
+      //@ts-ignore
+      let isSuperAdmin = req.user?.role === "SUPERADMIN";
+      let bod = req.body;
+      if (isSuperAdmin) {
+        bod = { ...req.body, isPublic: true };
+      }
+      const created = await NutritionPlanService.create(bod);
       res.status(StatusCodes.OK).json(changeResponse(true, created));
     } catch (e) {
       next(e);

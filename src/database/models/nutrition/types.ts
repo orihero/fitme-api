@@ -7,6 +7,8 @@ import { TrainerDocument } from "../trainer";
 
 export interface INutritionPlan {
   _id: ObjectId | string;
+  isPublic: boolean;
+  price: number;
   creatorName: string;
   title: string;
   description: string;

@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import createHttpError from "http-errors";
 import { WorkoutPlanService } from "../services";
 import { changeResponse } from "./../utils/changeResponse";
+import { IUser } from "database/models/user";
 
 export class WorkoutPlanController {
   public async find(req: Request, res: Response, next: NextFunction) {
@@ -17,8 +18,13 @@ export class WorkoutPlanController {
 
   public async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const created = await WorkoutPlanService.create(req.body);
-
+      //@ts-ignore
+      let isSuperAdmin = req.user?.role === "SUPERADMIN";
+      let bod = req.body;
+      if (isSuperAdmin) {
+        bod = { ...req.body, isPublic: true };
+      }
+      const created = await WorkoutPlanService.create(bod);
       res.status(StatusCodes.OK).json(changeResponse(true, created));
     } catch (e) {
       next(e);

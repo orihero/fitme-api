@@ -52,6 +52,7 @@ const WorkoutPlanService = {
 
       query.level = req.query.level;
     }
+    query.isPublic = req.query.isPublic;
 
     const foundResult = await WorkoutPlanModel.find(query).populate(populate);
 
@@ -76,6 +77,7 @@ const WorkoutPlanService = {
       week,
       creator,
       workouts,
+      isPublic,
     } = obj;
 
     const foundUser = await UserModel.findById(creator);
@@ -113,6 +115,7 @@ const WorkoutPlanService = {
       level,
       week,
       workouts,
+      isPublic,
       ...creatorr,
     });
 

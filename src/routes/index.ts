@@ -20,10 +20,10 @@ router.use("/users", authenticate, users);
 router.use("/trainers", trainers);
 router.use("/categories", categories);
 router.use("/exercises", exercises);
-router.use("/workout-plans", workoutPlans);
+router.use("/workout-plans", authenticate, workoutPlans);
 router.use("/products", products);
 router.use("/dishes", dishes);
-router.use("/nutrition-plans", nutritionPlans);
+router.use("/nutrition-plans", authenticate, nutritionPlans);
 router.use("/uploads", uploads);
 
 export default router;

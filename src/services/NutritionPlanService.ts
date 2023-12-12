@@ -48,7 +48,7 @@ const NutritionPlanService = {
 
       query.type = req.query.type;
     }
-
+    query.isPublic = req.query.isPublic;
     return await NutritionPlanModel.find(query).populate(populate);
   },
 
@@ -63,6 +63,8 @@ const NutritionPlanService = {
       type,
       creator,
       nutritions,
+      isPublic,
+      price,
     } = obj;
 
     const foundUser = await UserModel.findById(creator);
@@ -122,6 +124,8 @@ const NutritionPlanService = {
       oilPercent,
       type,
       nutritions,
+      isPublic,
+      price,
       ...creatorr,
     });
 

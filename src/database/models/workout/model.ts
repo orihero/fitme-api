@@ -8,6 +8,9 @@ const workoutPlanSchema = new Schema<IWorkoutPlan>(
       type: String,
       required: true,
     },
+    isPublic: {
+      type: Boolean,
+    },
 
     description: {
       type: String,
