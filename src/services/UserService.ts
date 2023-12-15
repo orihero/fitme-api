@@ -726,13 +726,33 @@ const UserService = {
     if (!plan) {
       throw createHttpError(StatusCodes.NOT_FOUND, "WorkoutPlan not found");
     }
+    let existingPlan = foundUser.scheduleWorkouts.find(
+      (e) => e.plan.title === plan.title
+    );
 
-    if (foundUser.scheduleWorkouts.find((s) => !s.isFinished)) {
-      throw createHttpError(
-        StatusCodes.BAD_REQUEST,
-        "User already have schedule workout"
-      );
+    if (!!existingPlan) {
+      console.log("EXISTING PLAN", JSON.stringify(existingPlan, null, 4), plan);
+
+      foundUser.scheduleWorkouts = foundUser.scheduleWorkouts.map((e) => {
+        if (e.plan.title === plan.title) {
+          e.current = true;
+          return e;
+        }
+        if (e.current) {
+          e.current = false;
+          return e;
+        }
+        return e;
+      });
+      await UserModel.findByIdAndUpdate(req.params.id, foundUser);
+      return foundUser;
     }
+    // if (foundUser.scheduleWorkouts.find((s) => !s.isFinished)) {
+    //   throw createHttpError(
+    //     StatusCodes.BAD_REQUEST,
+    //     "User already have schedule workout"
+    //   );
+    // }
 
     let results: any[][][][] = [];
 
@@ -760,7 +780,12 @@ const UserService = {
 
       results.push(weekResults);
     }
-
+    foundUser.scheduleWorkouts = foundUser.scheduleWorkouts.map((e) => {
+      if (e.current) {
+        e.current = false;
+      }
+      return e;
+    });
     foundUser.scheduleWorkouts = [
       ...foundUser.scheduleWorkouts,
       {
@@ -768,6 +793,7 @@ const UserService = {
         activeWeek: 0,
         plan,
         results,
+        current: true,
       },
     ];
 

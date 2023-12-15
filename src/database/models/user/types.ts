@@ -29,6 +29,7 @@ export type UserDocument = Document & IUser;
 export type ScheduleWorkout = {
   isFinished: boolean;
   activeWeek: number;
+  current: boolean;
   plan: WorkoutPlanDocument;
   results: WorkoutResult[][][][];
 };

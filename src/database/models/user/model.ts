@@ -48,6 +48,11 @@ const userSchema = new Schema<Partial<IUser>>(
           required: true,
         },
 
+        current: {
+          type: Boolean,
+          required: false,
+        },
+
         activeWeek: {
           type: Number,
           required: true,
