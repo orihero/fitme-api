@@ -1,7 +1,7 @@
-import { AdController } from "controllers/AdController";
+import { AdController } from "../controllers/AdController";
 import { Router } from "express";
-import { validate, validateIdParam } from "middlewares/validate";
-import { adValidation } from "validation/schemas/ad";
+import { validate, validateIdParam } from "../middlewares/validate";
+import { adValidation } from "../validation/schemas/ad";
 
 const router = Router();
 

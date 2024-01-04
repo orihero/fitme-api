@@ -1,7 +1,7 @@
-import { AdModel } from "database/models/ad";
+import { AdModel } from "../database/models/ad";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { changeResponse } from "utils/changeResponse";
+import { changeResponse } from "../utils/changeResponse";
 
 export class AdController {
   public async find(req: Request, res: Response, next: NextFunction) {
