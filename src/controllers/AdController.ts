@@ -24,7 +24,9 @@ export class AdController {
   }
   public async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      await AdModel.remove(req.params.id);
+      console.log("PARAMS", req.params);
+
+      await AdModel.deleteOne({ _id: req.params.id });
 
       res.status(StatusCodes.OK).json(changeResponse(true, null));
     } catch (e) {
