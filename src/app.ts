@@ -28,9 +28,10 @@ class App {
       await this.applyMiddlewares();
       this.app.use("/api", api);
       this.app.use("/", (r, s) => {
-        s.send("YOU REACHED FITME.UZ")
+        s.send("YOU REACHED FITME.UZ");
       });
       this.app.use([notfound, generic]);
+      this.app.disable("etag");
 
       await this.server.listen(this.port, () => {
         console.log(`Server listening at port ${this.port}`);
