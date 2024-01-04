@@ -11,9 +11,6 @@ const init = () => {
   passport.use(
     new Strategy(JWTConfig.Options, async (payload, done) => {
       try {
-        console.log("====================================");
-        console.log({ payload });
-        console.log("====================================");
         let usr = await UserService.find({ _id: payload.sub });
         if (usr) {
           done(null, usr);

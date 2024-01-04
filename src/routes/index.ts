@@ -10,6 +10,7 @@ import products from "./products";
 import dishes from "./dishes";
 import nutritionPlans from "./nutritionPlans";
 import uploads from "./uploads";
+import ad from "./ad";
 
 import authenticate from "../middlewares/authenticate";
 
@@ -25,5 +26,6 @@ router.use("/products", products);
 router.use("/dishes", dishes);
 router.use("/nutrition-plans", authenticate, nutritionPlans);
 router.use("/uploads", uploads);
+router.use("/ads", ad);
 
 export default router;
